@@ -29,7 +29,14 @@ const create = (req, res) => {
   db.Post.create(req.body, (err, savedPost) => {
     if (err) console.log(err);
 
-    console.log(req.body);
+    db.User.findById(req.body.user, (err, foundUser) => {
+      foundUser.posts.push(savedPost._id);
+      foundUser.save((err, savedUser) => {
+        if (err) {
+          console.log(err);
+        }
+      })
+    })
 
     res.json({ posts: savedPost });
   });
