@@ -15,11 +15,13 @@ const index = (req, res) => {
 
 // Show User
 const show = (req, res) => {
-  db.User.findById(req.params.id, (err, foundUser) => {
-    if (err) console.log(err);
+  db.User.findById(req.params.id)
+    .populate("posts")
+    .exec((err, foundUser) => {
+      if (err) console.log(err);
 
-    res.json({ user: foundUser });
-  });
+      res.json({ user: foundUser });
+    });
 };
 
 // Create User
@@ -51,6 +53,10 @@ const update = (req, res) => {
 const destroy = (req, res) => {
   db.User.findByIdAndDelete(req.params.id, (err, deletedUser) => {
     if (err) console.log(err);
+
+    db.Post.deleteMany({ _id: { $in: deletedUser.posts } }, (err) => {
+      if (err) return console.log(err);
+    });
 
     res.json({ user: deletedUser });
   });
