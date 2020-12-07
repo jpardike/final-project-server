@@ -8,7 +8,12 @@ db.User.deleteMany({}, (err, deletedUser) => {
 
       console.log(data.users.length, "users created successfully");
 
-      process.exit();
+      db.Post.create(data.posts, (err, seededPost) => {
+        if (err) console.log(err);
+
+        console.log(data.posts.length, "posts created successfully");
+        process.exit();
+      })
     });
   });
 });

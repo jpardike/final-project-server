@@ -7,5 +7,10 @@
             "password": "blueskies",
             "location": "Seattle, WA"
         }
+    ],
+    "posts": [
+        {
+            "body": "Hello World"
+        }
     ]
 }
