@@ -35,8 +35,8 @@ const create = (req, res) => {
         if (err) {
           console.log(err);
         }
-      })
-    })
+      });
+    });
 
     res.json({ posts: savedPost });
   });
@@ -58,11 +58,16 @@ const update = (req, res) => {
 
 // Delete Post
 const destroy = (req, res) => {
-  db.Post.findByIdAndDelete(req.params.id, (err, deletedPost) => {
+  const postId = req.params.id;
+  db.Post.findByIdAndDelete(postId, (err, deletedPost) => {
     if (err) console.log(err);
 
-    db.User.deleteMany({ _id: { $in: deletedPost.user } }, (err) => {
+    db.User.findOne({ posts: postId }, (err, foundUser) => {
       if (err) return console.log(err);
+      foundUser.posts.remove(postId);
+      foundUser.save((err, updatedUser) => {
+        if (err) return console.log(err);
+      });
     });
 
     res.json({ post: deletedPost });
