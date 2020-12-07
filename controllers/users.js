@@ -24,6 +24,17 @@ const show = (req, res) => {
     });
 };
 
+// Show User Login
+const loginShow = (req, res) => {
+  db.User.findOne({email: req.params.email})
+    .populate("posts")
+    .exec((err, foundUser) => {
+      if (err) console.log(err);
+
+      res.json({ user: foundUser });
+    });
+};
+
 // Create User
 const create = (req, res) => {
   db.User.create(req.body, (err, savedUser) => {
@@ -65,6 +76,7 @@ const destroy = (req, res) => {
 module.exports = {
   index,
   show,
+  loginShow,
   create,
   update,
   destroy,
